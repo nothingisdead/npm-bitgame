@@ -1,0 +1,33 @@
+{
+	"name": "bitgame",
+	"version": "0.0.1",
+	"description": "A simple library for multiplayer betting games using bitcoin and blockchain.info.",
+	"keywords": [
+		"bitcoin",
+		"gambling",
+		"game",
+		"btc",
+		"blockchain"
+	],
+	"author": "Robert Myers (https://github.com/nothingisdead)",
+	"contributors": [
+	],
+	"license": "MIT",
+	"dependencies": {
+		"querystring": ">=0.2.0",
+		"request": ">=2.27.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nothingisdead/npm-bitgame"
+	},
+	"main": "bitgame.js",
+	"engines": {
+		"node": ">=0.10"
+	},
+	"bugs": {
+		"url": "https://github.com/nothingisdead/npm-bitgame/issues",
+		"email": "rbmyr8@gmail.com"
+	},
+	"readmeFilename": "README.md"
+}
