@@ -54,7 +54,7 @@ var BitGame = function(config, buy_in, num_players, fee, distribution) {
 				new_received = tmp_balances[address] >= buy_in;
 
 				if(new_received && !old_received) {
-					self.emit('received', address, buy_in);
+					self.emit('received', address, tmp_balances[address]);
 				}
 
 				balances[address] = tmp_balances[address];
@@ -65,7 +65,7 @@ var BitGame = function(config, buy_in, num_players, fee, distribution) {
 			}
 
 			if(received_all) {
-				self.emit('received_all', balances);
+				self.emit('received_all', end, balances);
 			}
 			else {
 				setTimeout(checkPayments, 5000);
@@ -73,17 +73,7 @@ var BitGame = function(config, buy_in, num_players, fee, distribution) {
 		});
 	}
 
-	function verify(amount) {
-		var total = 0;
-
-		for(var i in balances) {
-			total += balances[i];
-		}
-
-		return total === +amount;
-	}
-
-	this.end = function(positions) {
+	function end(positions) {
 		if(typeof positions === 'string') {
 			positions = [positions];
 		}
@@ -113,15 +103,21 @@ var BitGame = function(config, buy_in, num_players, fee, distribution) {
 		}
 
 		wallet.sendMany(payouts, {}, function(error, result) {
-			self.emit('end');
+			if(error) {
+				self.emit('payout_error', error);
+			}
+			else {
+				self.emit('payouts_sent', payouts);
+			}
+
+			wallet.autoConsolidate(1, function(error, result) {
+				self.emit('consolidated', result);
+				self.emit('completed');
+			});
 		});
 	};
 
 	init();
-
-	wallet.autoConsolidate(1, function() {
-		console.log('consolidated');
-	});
 
 	this.on('ready', checkPayments);
 };

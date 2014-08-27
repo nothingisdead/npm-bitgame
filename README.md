@@ -6,11 +6,10 @@ Bitgame makes it easy to create a multiplayer game using BTC as a betting curren
 Example Usage:
 
 ```javascript
-
 var BitGame     = require('bitgame');
-var buy_in      = 500; // in satoshi
+var buy_in      = 20000; // in satoshi
 var num_players = 1;
-var fee         = 1;
+var fee         = 0.1;
 
 var game = new BitGame({
 	guid      : '<guid>',
@@ -18,25 +17,40 @@ var game = new BitGame({
 	password2 : '<password2>' // optional
 }, buy_in, num_players, fee);
 
-test.on('ready', function(data) {
-	console.log('Awaiting Buy-ins', data);
+game.on('ready', function(addresses) {
+	console.log('Awaiting Buy-ins', addresses);
 });
 
-test.on('received', function(data) {
-	console.log('received payment', data);
+game.on('received', function(address, amount) {
+	console.log('Received Payment', address, amount);
 });
 
-test.on('received_all', function(data) {
+game.on('received_all', function(endGame, balances) {
 	var winners = [
-		'winner1_address',
-		'winner2_address'
+		'<winner_address>',
 	];
 
-	test.end(winners);
+	endGame(winners);
+});
+
+game.on('payout_error', function(error) {
+	console.log('Failed to send payouts!', error);
+});
+
+game.on('payouts_sent', function(payouts) {
+	console.log('Sent Payouts', payouts);
+});
+
+game.on('consolidated', function(result) {
+	console.log('Consolidated Wallets', result);
+});
+
+game.on('completed', function() {
+	console.log('The game is over.');
 });
 
 ```
 
 Feeling generous? Send me a fraction of a bitcoin!
 
-12X8GyUpfYxEP7sh1QaU4ngWYpzXJByQn5
+12mDARddJ3fGVncReJvFWNGj5wsSQ2ZNTs
